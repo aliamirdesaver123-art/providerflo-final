@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>ProviderFlo | NDIS & Aged Care Management</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+
+    <!--
+      Critical asset preloads — fetched in parallel with JS/CSS so they arrive
+      before React renders, giving instant paint with no layout shift.
+    -->
+
+    <!-- Background image (login + signup, 17 KB WebP) -->
+    <link rel="preload" as="image" href="%BASE_URL%login-sky.webp" type="image/webp" />
+
+    <!-- Logo images used on first-paint screens -->
+    <link rel="preload" as="image" href="%BASE_URL%providerflo-logo.webp" type="image/webp" />
+    <link rel="preload" as="image" href="%BASE_URL%favicon.svg"      type="image/svg+xml" />
+
+    <!-- Inter font (self-hosted, 48 KB Latin woff2 — zero external round-trip) -->
+    <link rel="preload" as="font" href="%BASE_URL%fonts/inter-latin.woff2"
+          type="font/woff2" crossorigin="anonymous" />
+
+    <!--
+      Self-hosted Inter via inline @font-face — %BASE_URL% is substituted by
+      Vite at build time so the path is always correct regardless of base path.
+      Removing Google Fonts eliminates ~250 ms of DNS + TLS + HTTP on cold load.
+    -->
+    <style>
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 100 900;
+        font-display: swap;
+        src: url('%BASE_URL%fonts/inter-latin.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+          U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+          U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      /* Apply Inter immediately so there's no font-swap flash */
+      body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
