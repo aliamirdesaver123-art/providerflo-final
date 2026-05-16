@@ -3,6 +3,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import StatusBadge from "@/components/StatusBadge";
 import { useListCaseNotes, useCreateCaseNote, useDeleteCaseNote, useListParticipants, useListStaff } from "@workspace/api-client-react";
 import { getListCaseNotesQueryKey } from "@workspace/api-client-react";
+import type { Participant, StaffMember, CaseNote } from "@/types/entities";
 import { Plus, BookOpen, Lock, AlertCircle, Trash2, Sparkles, CheckCircle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -148,7 +149,7 @@ export default function CaseNotes() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Participants</SelectItem>
-            {participants?.map(p => <SelectItem key={p.id} value={p.id.toString()}>{p.firstName} {p.lastName}</SelectItem>)}
+            {(participants as Participant[] | undefined)?.map((p: Participant) => <SelectItem key={p.id} value={p.id.toString()}>{p.firstName} {p.lastName}</SelectItem>)}
           </SelectContent>
         </Select>
         <Select value={typeFilter} onValueChange={setTypeFilter}>
@@ -178,7 +179,7 @@ export default function CaseNotes() {
             </div>
           </div>
         ) : (
-          notes?.map(note => (
+          (notes as CaseNote[] | undefined)?.map((note: CaseNote) => (
             <div key={note.id} data-testid={`note-card-${note.id}`} className="pf-card" style={{ padding: "12px 16px" }}>
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
                 <div style={{ display: "flex", alignItems: "flex-start", gap: 12, flex: 1, minWidth: 0 }}>
@@ -231,7 +232,7 @@ export default function CaseNotes() {
                     <Select onValueChange={v => field.onChange(parseInt(v, 10))}>
                       <FormControl><SelectTrigger data-testid="select-note-participant-form"><SelectValue placeholder="Select..." /></SelectTrigger></FormControl>
                       <SelectContent>
-                        {participants?.map(p => <SelectItem key={p.id} value={p.id.toString()}>{p.firstName} {p.lastName}</SelectItem>)}
+                        {(participants as Participant[] | undefined)?.map((p: Participant) => <SelectItem key={p.id} value={p.id.toString()}>{p.firstName} {p.lastName}</SelectItem>)}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -243,7 +244,7 @@ export default function CaseNotes() {
                     <Select onValueChange={v => field.onChange(parseInt(v, 10))}>
                       <FormControl><SelectTrigger data-testid="select-note-staff-form"><SelectValue placeholder="Select..." /></SelectTrigger></FormControl>
                       <SelectContent>
-                        {staff?.map(s => <SelectItem key={s.id} value={s.id.toString()}>{s.firstName} {s.lastName}</SelectItem>)}
+                        {(staff as StaffMember[] | undefined)?.map((s: StaffMember) => <SelectItem key={s.id} value={s.id.toString()}>{s.firstName} {s.lastName}</SelectItem>)}
                       </SelectContent>
                     </Select>
                     <FormMessage />

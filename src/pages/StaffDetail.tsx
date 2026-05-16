@@ -1,14 +1,12 @@
 import AppLayout from "@/components/layout/AppLayout";
 import StatusBadge from "@/components/StatusBadge";
+import type { ComplianceDocument, StaffAvailability } from "@/types/entities";
 import { useGetStaff, useGetStaffCompliance, useGetStaffAvailability } from "@workspace/api-client-react";
 import { getGetStaffQueryKey, getGetStaffComplianceQueryKey } from "@workspace/api-client-react";
-import { Link } from "wouter";
+import { Link, useParams } from "wouter";
 import { ArrowLeft, Mail, Phone, Calendar } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-interface StaffDetailProps {
-  params: { id: string };
-}
 
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -23,8 +21,9 @@ const COMPLIANCE_LABELS: Record<string, string> = {
   other: "Other",
 };
 
-export default function StaffDetail({ params }: StaffDetailProps) {
-  const id = parseInt(params.id, 10);
+export default function StaffDetail() {
+  const { id: idParam } = useParams<{ id: string }>();
+  const id = parseInt(idParam ?? "0", 10);
 
   const { data: staff, isLoading } = useGetStaff(id, {
     query: { queryKey: getGetStaffQueryKey(id) },
@@ -139,7 +138,7 @@ export default function StaffDetail({ params }: StaffDetailProps) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
-                    {compliance?.map(doc => (
+                    {(compliance as ComplianceDocument[] | undefined)?.map((doc: ComplianceDocument) => (
                       <tr key={doc.id} data-testid={`compliance-${doc.id}`} className="hover:bg-muted/20">
                         <td className="px-4 py-3 text-sm font-medium text-foreground">{COMPLIANCE_LABELS[doc.documentType] ?? doc.documentType}</td>
                         <td className="px-4 py-3 text-sm text-muted-foreground font-mono">{doc.documentNumber ?? "—"}</td>
@@ -169,7 +168,7 @@ export default function StaffDetail({ params }: StaffDetailProps) {
                   {availability?.length === 0 ? (
                     <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground text-sm">No availability set</td></tr>
                   ) : (
-                    availability?.map(avail => (
+                    (availability as StaffAvailability[] | undefined)?.map((avail: StaffAvailability) => (
                       <tr key={avail.id} data-testid={`avail-${avail.id}`} className="hover:bg-muted/20">
                         <td className="px-4 py-3 text-sm text-foreground">{DAYS[avail.dayOfWeek]}</td>
                         <td className="px-4 py-3 text-sm text-foreground">{avail.startTime ?? "—"}</td>
