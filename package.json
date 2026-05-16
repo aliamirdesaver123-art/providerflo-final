@@ -1,0 +1,13 @@
+{
+  "name": "providerflo",
+  "private": true,
+  "type": "module",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
