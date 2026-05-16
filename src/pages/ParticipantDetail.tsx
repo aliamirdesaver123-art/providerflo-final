@@ -3,15 +3,12 @@ import AppLayout from "@/components/layout/AppLayout";
 import StatusBadge from "@/components/StatusBadge";
 import { useGetParticipant, useGetParticipantGoals, useGetParticipantContacts, useListShifts, useListCaseNotes } from "@workspace/api-client-react";
 import { getGetParticipantQueryKey, getGetParticipantGoalsQueryKey } from "@workspace/api-client-react";
-import { Link } from "wouter";
+import { Link, useParams } from "wouter";
 import { ArrowLeft, User, Phone, Mail, MapPin, Calendar, FileText, Sparkles, RefreshCw, TrendingDown, TrendingUp, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { fetchWithAuthJson } from "@/lib/fetchWithAuth";
 
-interface ParticipantDetailProps {
-  params: { id: string };
-}
 
 const RISK_COLORS: Record<string, { bg: string; text: string; border: string; Icon: React.ElementType }> = {
   critical: { bg: "#FEF2F2", text: "#DC2626", border: "#FECACA", Icon: AlertTriangle },
@@ -316,8 +313,9 @@ function FundingForecastTab({ participantId }: { participantId: number }) {
   );
 }
 
-export default function ParticipantDetail({ params }: ParticipantDetailProps) {
-  const id = parseInt(params.id, 10);
+export default function ParticipantDetail() {
+  const { id: idParam } = useParams<{ id: string }>();
+  const id = parseInt(idParam ?? "0", 10);
 
   const { data: participant, isLoading } = useGetParticipant(id, {
     query: { queryKey: getGetParticipantQueryKey(id) },
