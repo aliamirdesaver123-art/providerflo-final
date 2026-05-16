@@ -1,10 +1,16 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 
 const noop = () => {};
-const emptyQuery = (key: string) => () =>
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const emptyQuery = (key: string) => (..._args: any[]) =>
   useQuery({ queryKey: [key], queryFn: async () => ({}) as any, enabled: false });
-const emptyMutation = () => () => useMutation({ mutationFn: async () => ({}) as any });
-const queryKeyFn = (key: string) => () => [key];
+
+const emptyMutation = <TVariables = void,>() => () =>
+  useMutation({ mutationFn: async (_vars: TVariables) => ({}) as any });
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const queryKeyFn = (key: string) => (...args: any[]) => [key, ...args];
 
 export const useGetDashboardSummary = emptyQuery("dashboard-summary");
 export const useGetDashboardUpcomingShifts = emptyQuery("dashboard-upcoming-shifts");
@@ -22,19 +28,23 @@ export const useGetParticipantContacts = emptyQuery("participant-contacts");
 export const useGetStaff = emptyQuery("staff-detail");
 export const useGetStaffCompliance = emptyQuery("staff-compliance");
 export const useGetStaffAvailability = emptyQuery("staff-availability");
-export const useCreateParticipant = emptyMutation();
-export const useDeleteParticipant = emptyMutation();
-export const useUpdateParticipant = emptyMutation();
-export const useCreateStaff = emptyMutation();
-export const useDeleteStaff = emptyMutation();
-export const useUpdateStaff = emptyMutation();
-export const useCreateShift = emptyMutation();
-export const useDeleteShift = emptyMutation();
-export const useUpdateShift = emptyMutation();
-export const useCreateIncident = emptyMutation();
-export const useCreateCaseNote = emptyMutation();
-export const useDeleteCaseNote = emptyMutation();
-export const useCreateServiceAgreement = emptyMutation();
+interface CreatePayload { data: Record<string, unknown>; }
+interface UpdatePayload { id: number; data: Record<string, unknown>; }
+interface DeletePayload { id: number; }
+
+export const useCreateParticipant = emptyMutation<CreatePayload>();
+export const useDeleteParticipant = emptyMutation<DeletePayload>();
+export const useUpdateParticipant = emptyMutation<UpdatePayload>();
+export const useCreateStaff = emptyMutation<CreatePayload>();
+export const useDeleteStaff = emptyMutation<DeletePayload>();
+export const useUpdateStaff = emptyMutation<UpdatePayload>();
+export const useCreateShift = emptyMutation<CreatePayload>();
+export const useDeleteShift = emptyMutation<DeletePayload>();
+export const useUpdateShift = emptyMutation<UpdatePayload>();
+export const useCreateIncident = emptyMutation<CreatePayload>();
+export const useCreateCaseNote = emptyMutation<CreatePayload>();
+export const useDeleteCaseNote = emptyMutation<DeletePayload>();
+export const useCreateServiceAgreement = emptyMutation<CreatePayload>();
 export const getListParticipantsQueryKey = queryKeyFn("participants");
 export const getListStaffQueryKey = queryKeyFn("staff");
 export const getListShiftsQueryKey = queryKeyFn("shifts");
