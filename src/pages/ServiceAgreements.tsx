@@ -3,6 +3,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import StatusBadge from "@/components/StatusBadge";
 import { useListServiceAgreements, useCreateServiceAgreement, useListParticipants } from "@workspace/api-client-react";
 import { getListServiceAgreementsQueryKey } from "@workspace/api-client-react";
+import type { ServiceAgreement, Participant } from "@/types/entities";
 import { Link } from "wouter";
 import { Plus, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -116,7 +117,7 @@ export default function ServiceAgreements() {
                     </td>
                   </tr>
                 ) : (
-                  agreements?.map(ag => (
+                  (agreements as ServiceAgreement[] | undefined)?.map((ag: ServiceAgreement) => (
                     <tr key={ag.id} data-testid={`row-agreement-${ag.id}`}>
                       <td>
                         <Link href={`/service-agreements/${ag.id}`}>
@@ -151,7 +152,7 @@ export default function ServiceAgreements() {
                   <Select onValueChange={v => field.onChange(parseInt(v, 10))}>
                     <FormControl><SelectTrigger data-testid="select-agreement-participant"><SelectValue placeholder="Select participant" /></SelectTrigger></FormControl>
                     <SelectContent>
-                      {participants?.map(p => <SelectItem key={p.id} value={p.id.toString()}>{p.firstName} {p.lastName}</SelectItem>)}
+                      {(participants as Participant[] | undefined)?.map((p: Participant) => <SelectItem key={p.id} value={p.id.toString()}>{p.firstName} {p.lastName}</SelectItem>)}
                     </SelectContent>
                   </Select>
                   <FormMessage />

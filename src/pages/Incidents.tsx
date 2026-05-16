@@ -3,6 +3,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import StatusBadge from "@/components/StatusBadge";
 import { useListIncidents, useCreateIncident, useListParticipants, useListStaff } from "@workspace/api-client-react";
 import { getListIncidentsQueryKey } from "@workspace/api-client-react";
+import type { Incident, Participant, StaffMember } from "@/types/entities";
 import { Link } from "wouter";
 import { Plus, AlertTriangle, Sparkles, RefreshCw, CheckCircle2, Clock, ChevronDown, ChevronUp, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -284,7 +285,7 @@ export default function Incidents() {
             </div>
           </div>
         ) : (
-          incidents?.map(inc => (
+          (incidents as Incident[] | undefined)?.map((inc: Incident) => (
             <div key={inc.id} data-testid={`row-incident-${inc.id}`} className="pf-card" style={{ overflow: "hidden" }}>
               <div style={{ overflowX: "auto" }}>
                 <div style={{ display: "grid", gridTemplateColumns: "auto 1fr auto auto auto auto auto", alignItems: "center", gap: 14, padding: "12px 16px", minWidth: 640 }}>
@@ -333,7 +334,7 @@ export default function Incidents() {
                     <Select onValueChange={v => field.onChange(parseInt(v, 10))}>
                       <FormControl><SelectTrigger data-testid="select-incident-participant"><SelectValue placeholder="Select..." /></SelectTrigger></FormControl>
                       <SelectContent>
-                        {participants?.map(p => <SelectItem key={p.id} value={p.id.toString()}>{p.firstName} {p.lastName}</SelectItem>)}
+                        {(participants as Participant[] | undefined)?.map((p: Participant) => <SelectItem key={p.id} value={p.id.toString()}>{p.firstName} {p.lastName}</SelectItem>)}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -345,7 +346,7 @@ export default function Incidents() {
                     <Select onValueChange={v => field.onChange(parseInt(v, 10))}>
                       <FormControl><SelectTrigger data-testid="select-incident-staff"><SelectValue placeholder="Select staff..." /></SelectTrigger></FormControl>
                       <SelectContent>
-                        {staff?.map(s => <SelectItem key={s.id} value={s.id.toString()}>{s.firstName} {s.lastName}</SelectItem>)}
+                        {(staff as StaffMember[] | undefined)?.map((s: StaffMember) => <SelectItem key={s.id} value={s.id.toString()}>{s.firstName} {s.lastName}</SelectItem>)}
                       </SelectContent>
                     </Select>
                     <FormMessage />

@@ -1,5 +1,6 @@
 import AppLayout from "@/components/layout/AppLayout";
 import StatusBadge from "@/components/StatusBadge";
+import type { ComplianceDocument, StaffAvailability } from "@/types/entities";
 import { useGetStaff, useGetStaffCompliance, useGetStaffAvailability } from "@workspace/api-client-react";
 import { getGetStaffQueryKey, getGetStaffComplianceQueryKey } from "@workspace/api-client-react";
 import { Link, useParams } from "wouter";
@@ -137,7 +138,7 @@ export default function StaffDetail() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
-                    {compliance?.map(doc => (
+                    {(compliance as ComplianceDocument[] | undefined)?.map((doc: ComplianceDocument) => (
                       <tr key={doc.id} data-testid={`compliance-${doc.id}`} className="hover:bg-muted/20">
                         <td className="px-4 py-3 text-sm font-medium text-foreground">{COMPLIANCE_LABELS[doc.documentType] ?? doc.documentType}</td>
                         <td className="px-4 py-3 text-sm text-muted-foreground font-mono">{doc.documentNumber ?? "—"}</td>
@@ -167,7 +168,7 @@ export default function StaffDetail() {
                   {availability?.length === 0 ? (
                     <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground text-sm">No availability set</td></tr>
                   ) : (
-                    availability?.map(avail => (
+                    (availability as StaffAvailability[] | undefined)?.map((avail: StaffAvailability) => (
                       <tr key={avail.id} data-testid={`avail-${avail.id}`} className="hover:bg-muted/20">
                         <td className="px-4 py-3 text-sm text-foreground">{DAYS[avail.dayOfWeek]}</td>
                         <td className="px-4 py-3 text-sm text-foreground">{avail.startTime ?? "—"}</td>

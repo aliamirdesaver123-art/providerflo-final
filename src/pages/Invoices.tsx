@@ -3,6 +3,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import StatusBadge from "@/components/StatusBadge";
 import InvoicePreview from "@/components/InvoicePreview";
 import { useListInvoices, useListParticipants } from "@workspace/api-client-react";
+import type { Invoice, Participant } from "@/types/entities";
 import { getListInvoicesQueryKey, getListShiftsQueryKey } from "@workspace/api-client-react";
 import { Plus, Receipt, RefreshCw, FileText, Ban, AlertTriangle, Info, CheckCircle2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -204,10 +205,11 @@ export default function Invoices() {
     bulkGenerate.mutate(data);
   };
 
-  const totalPending = invoices?.filter(i => i.status === "draft" || i.status === "submitted")
-    .reduce((sum, i) => sum + (i.totalAmount as number), 0) ?? 0;
-  const totalPaid = invoices?.filter(i => i.status === "paid")
-    .reduce((sum, i) => sum + (i.totalAmount as number), 0) ?? 0;
+  const typedInvoices = invoices as Invoice[] | undefined;
+  const totalPending = typedInvoices?.filter((i: Invoice) => i.status === "draft" || i.status === "submitted")
+    .reduce((sum: number, i: Invoice) => sum + (i.totalAmount as number), 0) ?? 0;
+  const totalPaid = typedInvoices?.filter((i: Invoice) => i.status === "paid")
+    .reduce((sum: number, i: Invoice) => sum + (i.totalAmount as number), 0) ?? 0;
 
   return (
     <AppLayout>
@@ -291,7 +293,7 @@ export default function Invoices() {
                   </td>
                 </tr>
               ) : (
-                invoices?.map(inv => (
+                typedInvoices?.map((inv: Invoice) => (
                   <tr key={inv.id} data-testid={`row-invoice-${inv.id}`}>
                     <td style={{ fontFamily: "monospace", fontSize: 12 }}>{inv.invoiceNumber}</td>
                     <td style={{ fontSize: 13, fontWeight: 600 }}>{inv.participantName}</td>
@@ -394,7 +396,7 @@ export default function Invoices() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {participants?.map(p => (
+                      {(participants as Participant[] | undefined)?.map((p: Participant) => (
                         <SelectItem key={p.id} value={p.id.toString()}>{p.firstName} {p.lastName}</SelectItem>
                       ))}
                     </SelectContent>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AppLayout from "@/components/layout/AppLayout";
 import StatusBadge from "@/components/StatusBadge";
+import type { StaffMember } from "@/types/entities";
 import { useListStaff, useCreateStaff, useDeleteStaff, useUpdateStaff } from "@workspace/api-client-react";
 import { getListStaffQueryKey } from "@workspace/api-client-react";
 import { Link } from "wouter";
@@ -335,7 +336,7 @@ export default function Staff() {
                   </td>
                 </tr>
               ) : (
-                staff?.map(s => (
+                (staff as StaffMember[] | undefined)?.map((s: StaffMember) => (
                   <tr key={s.id} data-testid={`row-staff-${s.id}`}>
                     <td>
                       <Link href={`/staff/${s.id}`}>

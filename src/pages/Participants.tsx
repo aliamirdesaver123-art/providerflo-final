@@ -3,6 +3,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import StatusBadge from "@/components/StatusBadge";
 import { useListParticipants, useCreateParticipant, useDeleteParticipant, useUpdateParticipant } from "@workspace/api-client-react";
 import { Link } from "wouter";
+import type { Participant } from "@/types/entities";
 import { Search, Plus, User, Trash2, Pencil, ShieldCheck, MapPin, Sparkles, RefreshCw } from "lucide-react";
 import { fetchWithAuthJson } from "@/lib/fetchWithAuth";
 import { Button } from "@/components/ui/button";
@@ -340,7 +341,7 @@ export default function Participants() {
                   </td>
                 </tr>
               ) : (
-                participants?.map(p => (
+                (participants as Participant[] | undefined)?.map((p: Participant) => (
                   <tr key={p.id} data-testid={`row-participant-${p.id}`}>
                     <td>
                       <Link href={`/participants/${p.id}`}>

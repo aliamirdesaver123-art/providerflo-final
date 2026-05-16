@@ -8,6 +8,7 @@ import { ArrowLeft, User, Phone, Mail, MapPin, Calendar, FileText, Sparkles, Ref
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { fetchWithAuthJson } from "@/lib/fetchWithAuth";
+import type { ParticipantGoal, Shift, CaseNote, ParticipantContact } from "@/types/entities";
 
 
 const RISK_COLORS: Record<string, { bg: string; text: string; border: string; Icon: React.ElementType }> = {
@@ -468,7 +469,7 @@ export default function ParticipantDetail() {
                 <div className="p-8 text-center text-muted-foreground">No goals recorded</div>
               ) : (
                 <div className="divide-y divide-border">
-                  {goals?.map(goal => (
+                  {(goals as ParticipantGoal[] | undefined)?.map((goal: ParticipantGoal) => (
                     <div key={goal.id} data-testid={`goal-${goal.id}`} className="p-4">
                       <div className="flex items-start justify-between gap-2">
                         <div>
@@ -502,7 +503,7 @@ export default function ParticipantDetail() {
                   {shifts?.length === 0 ? (
                     <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground text-sm">No shifts recorded</td></tr>
                   ) : (
-                    shifts?.slice(0, 20).map(shift => (
+                    (shifts as Shift[] | undefined)?.slice(0, 20).map((shift: Shift) => (
                       <tr key={shift.id} data-testid={`shift-${shift.id}`} className="hover:bg-muted/20">
                         <td className="px-4 py-3 text-sm text-foreground">{shift.scheduledStart.slice(0, 10)}</td>
                         <td className="px-4 py-3 text-sm text-foreground">{shift.staffName}</td>
@@ -522,7 +523,7 @@ export default function ParticipantDetail() {
               {notes?.length === 0 ? (
                 <div className="bg-card border border-border rounded-xl p-8 text-center text-muted-foreground">No case notes recorded</div>
               ) : (
-                notes?.slice(0, 15).map(note => (
+                (notes as CaseNote[] | undefined)?.slice(0, 15).map((note: CaseNote) => (
                   <div key={note.id} data-testid={`note-${note.id}`} className="bg-card border border-border rounded-xl p-4">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1">
@@ -545,7 +546,7 @@ export default function ParticipantDetail() {
               {contacts?.length === 0 ? (
                 <div className="p-8 text-center text-muted-foreground">No emergency contacts recorded</div>
               ) : (
-                contacts?.map(contact => (
+                (contacts as ParticipantContact[] | undefined)?.map((contact: ParticipantContact) => (
                   <div key={contact.id} data-testid={`contact-${contact.id}`} className="p-4 flex items-start gap-3">
                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                       <User className="w-4 h-4 text-primary" />
